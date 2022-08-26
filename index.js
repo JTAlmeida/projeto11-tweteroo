@@ -9,13 +9,23 @@ const tweets = [];
 const userData = [];
 
 server.post("/sign-up", (req, res) => {
-  userData.push(req.body);
-  res.send(userData);
+  const { username, avatar } = req.body;
+  if (!username || !avatar) {
+    res.status(400).send("Todos os campos são obrigatórios!");
+  } else {
+    userData.push(req.body);
+    res.status(201).send("OK");
+  }
 });
 
 server.post("/tweets", (req, res) => {
-  tweets.push(req.body);
-  res.send(tweets);
+  const { username, tweet } = req.body;
+  if (!username || !tweet) {
+    res.status(400).send("Todos os campos são obrigatórios!");
+  } else {
+    tweets.push(req.body);
+    res.status(201).send("OK");
+  }
 });
 
 server.get("/tweets", (req, res) => {
@@ -24,7 +34,7 @@ server.get("/tweets", (req, res) => {
   const userTweets = latestTweets.map((tweet) => {
     for (let i = 0; i < userData.length; i++) {
       if (tweet.username === userData[i].username) {
-        return {...tweet, avatar: userData[i].avatar };
+        return { ...tweet, avatar: userData[i].avatar };
       }
     }
   });
